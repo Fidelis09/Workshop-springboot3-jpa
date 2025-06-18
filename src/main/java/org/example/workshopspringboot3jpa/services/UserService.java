@@ -1,5 +1,6 @@
 package org.example.workshopspringboot3jpa.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.workshopspringboot3jpa.entities.User;
 import org.example.workshopspringboot3jpa.repositories.UserRepository;
 import org.example.workshopspringboot3jpa.services.exceptions.DatabaseException;
@@ -42,9 +43,14 @@ public class UserService {
     }
 
     public User update(Long id, User obj){
+        try {
+
         User entity = repository.getReferenceById(id);
         updateData(entity, obj);
         return repository.save(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(e);
+        }
     }
 
     private void updateData(User entity, User obj) {
